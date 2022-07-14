@@ -84,7 +84,7 @@ describe("src/main.js", () => {
 
     it("should resolve with a promise containing the newly saved student", async () => {
       // Write your solution here
-      axios.post.mockImplementation(() => Promise.resolve({ student }));
+      axios.post.mockImplementation(() => Promise.resolve({ data: student }));
       // jest.spyOn(console)
       const response = await create(student);
       expect(response).toEqual(student);
@@ -128,11 +128,12 @@ describe("src/main.js", () => {
 
     it("should resolve with a promise containing the student data", async () => {
       // Write your solution here
-      axios.get.mockImplementation(() => Promise.resolve({ student.id }));
+      axios.get.mockImplementation(() => Promise.resolve({ data: student }));
 
-      const response = await show(student.id);
 
-      const expected = student.id;
+      const response = await show(id);
+
+      const expected = student;
 
       expect(response).toEqual(expected);
     });

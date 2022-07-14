@@ -39,4 +39,3 @@ module.exports = {
   show,
 };
 
-console.log(index())
