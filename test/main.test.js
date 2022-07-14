@@ -24,9 +24,9 @@ describe("src/main.js", () => {
     ];
 
     beforeEach(() => {
-      jest.spyOn(axios, 'get');
+      jest.spyOn(axios, "get");
     });
-    
+
     afterEach(() => {
       jest.clearAllMocks();
     });
@@ -41,11 +41,11 @@ describe("src/main.js", () => {
       axios.get.mockImplementation(() => Promise.resolve({ data }));
 
       const response = await index();
-      
+
       const expected = data.slice(0, 2);
       expect(response).toEqual(expected);
     });
-    
+
     it("should log an error to the console", async () => {
       axios.get.mockImplementation(() =>
         Promise.reject(new Error("GET request failed."))
@@ -57,75 +57,96 @@ describe("src/main.js", () => {
       expect(console.error).toHaveBeenCalledWith("GET request failed.");
     });
   });
-  
+
   describe("create()", () => {
     const body = {
       name: "Chin Yong",
-      score: 76
+      score: 76,
     };
-    
+
     // You can use this student data in your tests
     const student = { ...body, id: "abc-def" };
 
     beforeEach(() => {
-      jest.spyOn(axios, 'post');
+      jest.spyOn(axios, "post");
     });
-    
+
     afterEach(() => {
       jest.clearAllMocks();
     });
 
     it("should make a POST request to the appropriate URL with a valid data body", async () => {
       // Write your solution here
-      axios.post.mockImplementation(() => Promise.resolve({student}));
-      // const response = await index(); 
-      // console.log(response)
-
-
-      expect(response).toBe(2);
+      await create(student)
+      const expectedURL = `${BASE_URL}/students`;
+      expect(axios.post).toHaveBeenCalledWith(expectedURL, student);
     });
 
     it("should resolve with a promise containing the newly saved student", async () => {
       // Write your solution here
-      expect(1).toBe(2);
+      axios.post.mockImplementation(() => Promise.resolve({ student }));
+      // jest.spyOn(console)
+      const response = await create(student);
+      expect(response).toEqual(student);
     });
-    
+
     it("should log an error to the console", async () => {
       // Write your solution here
-      expect(1).toBe(2);
+      axios.post.mockImplementation(() =>
+        Promise.reject(new Error("POST request failed."))
+      );
+      jest.spyOn(console, "error");
+
+      await create(student);
+
+      expect(console.error).toHaveBeenCalledWith("POST request failed.");
     });
   });
-  
-   describe("show()", () => {
+
+  describe("show()", () => {
     const student = {
       id: "abc-def",
       name: "Chin Yong",
       score: 76,
     };
-     
+
     const { id } = student;
 
     beforeEach(() => {
-      jest.spyOn(axios, 'get');
+      jest.spyOn(axios, "get");
     });
-    
+
     afterEach(() => {
       jest.clearAllMocks();
     });
 
     it("should make a GET request to the appropriate URL", async () => {
-      // Write your solution here
-      expect(1).toBe(2);
+      await show(id);
+      const expectedURL = `${BASE_URL}/students/${id}`;
+      expect(axios.get).toHaveBeenCalledWith(expectedURL);
     });
 
     it("should resolve with a promise containing the student data", async () => {
       // Write your solution here
-      expect(1).toBe(2);
+      axios.get.mockImplementation(() => Promise.resolve({ student.id }));
+
+      const response = await show(student.id);
+
+      const expected = student.id;
+
+      expect(response).toEqual(expected);
     });
-     
+
     it("should log an error to the console", async () => {
       // Write your solution here
-      expect(1).toBe(2);
+      axios.get.mockImplementation(() =>
+        Promise.reject(new Error("GET request failed."))
+      );
+      jest.spyOn(console, "error");
+
+      await index();
+
+      expect(console.error).toHaveBeenCalledWith("GET request failed.");
     });
-  }); 
-});  
+  });
+});

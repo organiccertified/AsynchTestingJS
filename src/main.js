@@ -38,3 +38,5 @@ module.exports = {
   create,
   show,
 };
+
+console.log(index())
